@@ -1,17 +1,19 @@
 import nodemailer from "nodemailer";
+import dotenv from "dotenv";
 
+dotenv.config();
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: "srinivasanbalakrishan04@gmail.com",
-    pass: "ebfp voxq wggn bpsv",
+    pass: "ebfp voxq wggn bpsv"
   },
 });
 
 export const sendOtpEmail = async (recipient, otp) => {
   try {
     await transporter.sendMail({
-      from: "srinivasanbalakrishan04@gmail.com",
+      from:"srinivasanbalakrishan04@gmail.com",
       to: recipient,
       subject: "Your OTP for verification",
       html: `<h1>Hello,</h1> <p>Your OTP code is <b>${otp}</b>. This code will expire in 2 minutes.</p>
