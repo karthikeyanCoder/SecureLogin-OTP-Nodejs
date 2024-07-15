@@ -1,13 +1,20 @@
 import jwt from "jsonwebtoken";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 dotenv.config();
-const { JWT_SECRET} = process.env;
+const { JWT_SECRET } = process.env;
 
 const verifyToken = async (req, res, next) => {
   try {
     const PATH = req.path;
 
-    if (PATH === "/first-login" || PATH === "/verify-otp"  || PATH === "/login" || PATH === "/reset-password" || PATH === "/register") {
+    if (
+      PATH === "/first-login" ||
+      PATH === "/verify-otp" ||
+      PATH === "/login" ||
+      PATH === "/reset-password" ||
+      PATH === "/register" 
+  
+    ) {
       next();
       return;
     }
@@ -27,6 +34,7 @@ const verifyToken = async (req, res, next) => {
     }
     const decodedToken = jwt.verify(token, JWT_SECRET);
     req.user = decodedToken;
+    console.log("user :", decodedToken);
     next();
   } catch (error) {
     if (error?.name === "TokenExpiredError") {
@@ -35,6 +43,5 @@ const verifyToken = async (req, res, next) => {
     return res.status(403).json({ message: "Token verification failed" });
   }
 };
- 
 
 export { verifyToken };
