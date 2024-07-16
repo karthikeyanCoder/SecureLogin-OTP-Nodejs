@@ -18,7 +18,10 @@ export const initailLogin = async (req, res) => {
       user.otp = otp;
       await user.save();
       await sendOtpEmail(email, otp);
-      return res.json({ message: "OTP sent to your Email account", isFirstTime: true });
+      return res.json({
+        message: "OTP sent to your Email account",
+        isFirstTime: true,
+      });
     } else {
       //const token = generateToken(user);
       return res.json({
@@ -47,7 +50,7 @@ export const verifyOtp = async (req, res) => {
     }
     console.log(`OTP for user : ${email}: otps is : ${otp}`);
     user.otp = null;
-    user.isOtpVerified =true;
+    user.isOtpVerified = true;
     await user.save();
 
     return res.json({ message: "OTP verified, proceed to reset password" });
@@ -80,12 +83,9 @@ export const resetPassword = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
     if (!user.isOtpVerified) {
-      return res
-        .status(400)
-        .json({
-          message:
-            "First time OTP verification is required before resetting the password",
-        });
+      return res.status(400).json({
+        message: " OTP verification is required before resetting the password",
+      });
     }
     user.password = await hash(password, 10);
     user.isFirstTime = false;
@@ -124,8 +124,7 @@ export const login = async (req, res) => {
   }
 };
 
-
-//forget password 
+//forget password
 
 export const forgotPasswordOtpSend = async (req, res) => {
   try {
@@ -137,7 +136,7 @@ export const forgotPasswordOtpSend = async (req, res) => {
     }
 
     const otp = randomBytes(3).toString("hex");
-    const otpExpires = Date.now() + 10 * 60 * 1000;  
+    const otpExpires = Date.now() + 10 * 60 * 1000;
 
     user.forgotPasswordOtp = otp;
     user.otpExpires = otpExpires;
@@ -145,13 +144,14 @@ export const forgotPasswordOtpSend = async (req, res) => {
 
     await sendOtpEmail(email, otp);
 
-    return res.json({ message: "Forget password ,OTP sent to your email account" });
+    return res.json({
+      message: "Forget password ,OTP sent to your email account",
+    });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
 };
 
- 
 export const forgotPasswordOtpVerify = async (req, res) => {
   try {
     const { email, otp } = req.body;
@@ -179,18 +179,20 @@ export const forgotPasswordOtpVerify = async (req, res) => {
   }
 };
 
-
-
 export const forgetResetPassword = async (req, res) => {
   try {
     const { email, password, confirmPassword } = req.body;
 
     if (!password || !confirmPassword) {
-      return res.status(400).json({ message: "Both password and confirm password are required" });
+      return res
+        .status(400)
+        .json({ message: "Both password and confirm password are required" });
     }
 
     if (password !== confirmPassword) {
-      return res.status(400).json({ message: "Password and confirm password do not match" });
+      return res
+        .status(400)
+        .json({ message: "Password and confirm password do not match" });
     }
 
     const user = await User.findOne({ email });
@@ -200,7 +202,10 @@ export const forgetResetPassword = async (req, res) => {
     }
 
     if (!user.isOtpVerified && !user.forgotPasswordOtp) {
-      return res.status(400).json({ message: "OTP verification is required before resetting the password" });
+      return res.status(400).json({
+        message:
+          "First time OTP verification is required before resetting the password",
+      });
     }
 
     user.password = await hash(password, 10);
