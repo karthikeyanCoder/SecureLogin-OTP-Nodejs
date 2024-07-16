@@ -3,6 +3,7 @@ import { sendOtpEmail } from "../utils/email.js";
 import { randomBytes } from "crypto";
 import { hash, compare } from "bcrypt";
 import { generateToken } from "../utils/jwt.js";
+import { validatePassword } from "../utils/passwordValidator.js";
 
 export const initailLogin = async (req, res) => {
   try {
@@ -61,21 +62,17 @@ export const verifyOtp = async (req, res) => {
 
 export const resetPassword = async (req, res) => {
   try {
-    const { email, password, confirmPassword } = req.body;
-
-    console.log("Reset password request:", email, password, confirmPassword);
-
-    if (!password || !confirmPassword) {
-      return res
-        .status(400)
-        .json({ message: "Both password and confirm password are required" });
+    const { email, password } = req.body;
+    if (!password) {
+      return res.status(400).json({ message: "  password are required" });
     }
-
-    if (password !== confirmPassword) {
-      return res
-        .status(400)
-        .json({ message: "Password and confirm password do not match" });
+    if (!validatePassword(password)) {
+      return res.status(400).json({
+        message:
+          "Password validation failed. It should contain at least 8 characters, 1 number, and 1 special character.",
+      });
     }
+    console.log("Reset password request:", email, password);
 
     const user = await User.findOne({ email });
 
@@ -123,6 +120,7 @@ export const login = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 };
+
 
 //forget password
 
@@ -182,6 +180,12 @@ export const forgotPasswordOtpVerify = async (req, res) => {
 export const forgetResetPassword = async (req, res) => {
   try {
     const { email, password, confirmPassword } = req.body;
+    if (!validatePassword(password)) {
+      return res.status(400).json({
+        message:
+          "Password validation failed. It should contain at least 8 characters, 1 number, and 1 special character.",
+      });
+    }
 
     if (!password || !confirmPassword) {
       return res

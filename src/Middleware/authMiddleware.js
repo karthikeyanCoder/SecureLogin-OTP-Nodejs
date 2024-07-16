@@ -8,7 +8,7 @@ const verifyToken = async (req, res, next) => {
     const PATH = req.path;
 
     if (
-      PATH === "/first-login" ||
+      PATH === "/validate-user" ||
       PATH === "/verify-otp" ||
       PATH === "/login" ||
       PATH === "/reset-password" ||

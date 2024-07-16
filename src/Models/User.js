@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-
+ 
 const Schema = mongoose.Schema;
-const passwordValidator = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-zA-Z]).{8,}$/;
+
 const userSchema = new Schema(
   {
     email: {
@@ -13,14 +13,6 @@ const userSchema = new Schema(
       type: String,
       required: true,
       minlength: [8, "Password cannot be shorter than 8 characters."],
-
-      validate: {
-        validator: function (v) {
-          return passwordValidator.test(v);
-        },
-        message: (props) =>
-          `${props.value} is not a valid password. It should contain at least 8 characters, 1 number, and 1 special character.`,
-      },
     },
     otp: { type: String },
     forgotPasswordOtp: { type: String },
