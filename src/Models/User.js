@@ -23,7 +23,7 @@ const userSchema = new Schema(
       },
     },
     otp: { type: String },
-    
+    forgotPasswordOtp: { type: String },
     isFirstTime: { type: Boolean, default: true },
     isOtpVerified: { type: Boolean, default: false },
   },

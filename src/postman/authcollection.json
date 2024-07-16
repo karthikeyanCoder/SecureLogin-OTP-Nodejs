@@ -1,10 +1,49 @@
 {
   "info": {
-    "name": "Node.js Project API Collection",
-    "description": "Postman collection for Node.js project APIs",
+    "name": "User Authentication API",
+    "description": "This collection contains the API endpoints for user registration, login, OTP verification, password reset, and related functionalities.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
+    {
+      "name": "User Registration",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/register",
+          "host": ["{{base_url}}"],
+          "path": ["register"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"Password@123\"\n}"
+        },
+        "description": "This endpoint registers a new user. It expects an email and a password in the request body."
+      },
+      "response": [
+        {
+          "name": "Successful Registration",
+          "status": "200",
+          "body": "{\n  \"message\": \"User registered successfully.\",\n  \"isFirstTime\": true\n}"
+        },
+        {
+          "name": "User Already Exists",
+          "status": "400",
+          "body": "{\n  \"message\": \"User already exists\"\n}"
+        },
+        {
+          "name": "Registration Failed",
+          "status": "500",
+          "body": "{\n  \"message\": \"Registration failed. Please try again.\"\n}"
+        }
+      ]
+    },
     {
       "name": "Initial Login",
       "request": {
@@ -15,17 +54,34 @@
             "value": "application/json"
           }
         ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n    \"email\": \"user@example.com\"\n}"
-        },
         "url": {
           "raw": "{{base_url}}/first-login",
           "host": ["{{base_url}}"],
           "path": ["first-login"]
         },
-        "description": "Initiates the login process for a user. If the user is logging in for the first time, an OTP is sent to their email."
-      }
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"user@example.com\"\n}"
+        },
+        "description": "This endpoint handles the initial login for a user. It sends an OTP to the user's email if it is their first time logging in."
+      },
+      "response": [
+        {
+          "name": "OTP Sent",
+          "status": "200",
+          "body": "{\n  \"message\": \"OTP sent to your Email account\",\n  \"isFirstTime\": true\n}"
+        },
+        {
+          "name": "User Not Found",
+          "status": "404",
+          "body": "{\n  \"message\": \"User not found\"\n}"
+        },
+        {
+          "name": "Returning User",
+          "status": "200",
+          "body": "{\n  \"message\": \"Returning user. You can redirect to login page\",\n  \"isFirstTime\": false\n}"
+        }
+      ]
     },
     {
       "name": "Verify OTP",
@@ -37,17 +93,34 @@
             "value": "application/json"
           }
         ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n    \"email\": \"user@example.com\",\n    \"otp\": \"123456\"\n}"
-        },
         "url": {
           "raw": "{{base_url}}/verify-otp",
           "host": ["{{base_url}}"],
           "path": ["verify-otp"]
         },
-        "description": "Verifies the OTP sent to the user's email during the initial login process."
-      }
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"user@example.com\",\n  \"otp\": \"123456\"\n}"
+        },
+        "description": "This endpoint verifies the OTP sent to the user's email during initial login or password reset."
+      },
+      "response": [
+        {
+          "name": "OTP Verified",
+          "status": "200",
+          "body": "{\n  \"message\": \"OTP verified, proceed to reset password\"\n}"
+        },
+        {
+          "name": "Invalid OTP",
+          "status": "400",
+          "body": "{\n  \"message\": \"Invalid OTP\"\n}"
+        },
+        {
+          "name": "User Not Found",
+          "status": "404",
+          "body": "{\n  \"message\": \"User not found\"\n}"
+        }
+      ]
     },
     {
       "name": "Reset Password",
@@ -59,17 +132,39 @@
             "value": "application/json"
           }
         ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n    \"email\": \"user@example.com\",\n    \"password\": \"newpassword\"\n}"
-        },
         "url": {
           "raw": "{{base_url}}/reset-password",
           "host": ["{{base_url}}"],
           "path": ["reset-password"]
         },
-        "description": "Resets the user's password after verifying the OTP. Requires the user's email and a new password."
-      }
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"NewPassword@123\",\n  \"confirmPassword\": \"NewPassword@123\"\n}"
+        },
+        "description": "This endpoint resets the user's password. It expects the user's email, new password, and password confirmation in the request body."
+      },
+      "response": [
+        {
+          "name": "Password Reset Successful",
+          "status": "200",
+          "body": "{\n  \"message\": \"Password reset successful\",\n  \"token\": \"<JWT_TOKEN>\"\n}"
+        },
+        {
+          "name": "Passwords Do Not Match",
+          "status": "400",
+          "body": "{\n  \"message\": \"Password and confirm password do not match\"\n}"
+        },
+        {
+          "name": "User Not Found",
+          "status": "404",
+          "body": "{\n  \"message\": \"User not found\"\n}"
+        },
+        {
+          "name": "OTP Verification Required",
+          "status": "400",
+          "body": "{\n  \"message\": \"First time OTP verification is required before resetting the password\"\n}"
+        }
+      ]
     },
     {
       "name": "Login",
@@ -81,37 +176,161 @@
             "value": "application/json"
           }
         ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n    \"email\": \"user@example.com\",\n    \"password\": \"password\"\n}"
-        },
         "url": {
           "raw": "{{base_url}}/login",
           "host": ["{{base_url}}"],
           "path": ["login"]
         },
-        "description": "Logs in a user with their email and password."
-      }
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"Password@123\"\n}"
+        },
+        "description": "This endpoint logs in a user. It expects the user's email and password in the request body."
+      },
+      "response": [
+        {
+          "name": "Login Successful",
+          "status": "200",
+          "body": "{\n  \"message\": \"Login successful\",\n  \"token\": \"<JWT_TOKEN>\"\n}"
+        },
+        {
+          "name": "Invalid Password",
+          "status": "400",
+          "body": "{\n  \"message\": \"Invalid password\"\n}"
+        },
+        {
+          "name": "User Not Found",
+          "status": "404",
+          "body": "{\n  \"message\": \"User not found\"\n}"
+        },
+        {
+          "name": "First Time Login Requires OTP",
+          "status": "400",
+          "body": "{\n  \"message\": \"First-time login requires OTP verification.\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Forgot Password - Send OTP",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/forget-password",
+          "host": ["{{base_url}}"],
+          "path": ["forget-password"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"user@example.com\"\n}"
+        },
+        "description": "This endpoint sends an OTP to the user's email for password reset. It expects the user's email in the request body."
+      },
+      "response": [
+        {
+          "name": "OTP Sent for Forgot Password",
+          "status": "200",
+          "body": "{\n  \"message\": \"Forget password ,OTP sent to your email account\"\n}"
+        },
+        {
+          "name": "User Not Found",
+          "status": "404",
+          "body": "{\n  \"message\": \"User not found\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Forgot Password - Verify OTP",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/password-otp-verify",
+          "host": ["{{base_url}}"],
+          "path": ["password-otp-verify"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"user@example.com\",\n  \"otp\": \"123456\"\n}"
+        },
+        "description": "This endpoint verifies the OTP sent to the user's email for password reset."
+      },
+      "response": [
+        {
+          "name": "OTP Verified for Password Reset",
+          "status": "200",
+          "body": "{\n  \"message\": \"OTP verified, proceed to reset password\"\n}"
+        },
+        {
+          "name": "Invalid OTP",
+          "status": "400",
+          "body": "{\n  \"message\": \"Invalid OTP\"\n}"
+        },
+        {
+          "name": "User Not Found",
+          "status": "404",
+          "body": "{\n  \"message\": \"User not found\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Forgot Password - Reset Password",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/password-reset",
+          "host": ["{{base_url}}"],
+          "path": ["password-reset"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"NewPassword@123\",\n  \"confirmPassword\": \"NewPassword@123\"\n}"
+        },
+        "description": "This endpoint resets the user's password after verifying the OTP. It expects the user's email, new password, and password confirmation in the request body."
+      },
+      "response": [
+        {
+          "name": "Password Reset Successful",
+          "status": "200",
+          "body": "{\n  \"message\": \"Password reset successful\",\n  \"token\": \"<JWT_TOKEN>\"\n}"
+        },
+        {
+          "name": "Passwords Do Not Match",
+          "status": "400",
+          "body": "{\n  \"message\": \"Password and confirm password do not match\"\n}"
+        },
+        {
+          "name": "User Not Found",
+          "status": "404",
+          "body": "{\n  \"message\": \"User not found\"\n}"
+        }
+      ]
     }
   ],
-  "auth": {
-    "type": "bearer",
-    "bearer": [
-      {
-        "key": "token",
-        "value": "{{token}}",
-        "type": "string"
-      }
-    ]
-  },
   "variable": [
     {
       "key": "base_url",
       "value": "http://localhost:8080"
     },
     {
-      "key": "token",
-      "value": ""
+      "key": "deploy_url",
+      "value": "https://securelogin-otp-nodejs.onrender.com"
     }
   ]
 }

@@ -12,7 +12,10 @@ const verifyToken = async (req, res, next) => {
       PATH === "/verify-otp" ||
       PATH === "/login" ||
       PATH === "/reset-password" ||
-      PATH === "/register" 
+      PATH === "/register" ||
+      PATH === "/forget-password"||
+      PATH === "/password-otp-verify"||
+      PATH ===  "/forget-reset-password"
   
     ) {
       next();
