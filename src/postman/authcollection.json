@@ -55,7 +55,7 @@
           }
         ],
         "url": {
-          "raw": "{{base_url}}/first-login",
+          "raw": "{{base_url}}/validate-user",
           "host": ["{{base_url}}"],
           "path": ["first-login"]
         },
