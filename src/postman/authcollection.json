@@ -294,9 +294,9 @@
           }
         ],
         "url": {
-          "raw": "{{base_url}}/password-reset",
+          "raw": "{{base_url}}/forget-reset-password",
           "host": ["{{base_url}}"],
-          "path": ["password-reset"]
+          "path": ["forget-reset-password"]
         },
         "body": {
           "mode": "raw",

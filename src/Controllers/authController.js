@@ -42,9 +42,9 @@ export const verifyOtp = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    // if (user.isFirstTime) {
-    //   return res.status(400).json({ message: "First-time login requires." });
-    // }
+    if (!user.isFirstTime) {
+      return res.status(400).json({ message: "your not from validate user ." });
+    }
 
     if (!user || user.otp !== otp) {
       return res.status(400).json({ message: "Invalid OTP" });
@@ -54,13 +54,13 @@ export const verifyOtp = async (req, res) => {
     user.isOtpVerified = true;
     await user.save();
 
-    return res.json({ message: "OTP verified, proceed to reset password" });
+    return res.json({ message: "OTP verified, proceed to create your password" });
   } catch (error) {
     return res.status(500).json({ error: error.message, error });
   }
 };
 
-export const resetPassword = async (req, res) => {
+export const createPassword = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!password) {
@@ -72,7 +72,7 @@ export const resetPassword = async (req, res) => {
           "Password validation failed. It should contain at least 8 characters, 1 number, and 1 special character.",
       });
     }
-    console.log("Reset password request:", email, password);
+    console.log("create password request:", email, password);
 
     const user = await User.findOne({ email });
 
@@ -88,10 +88,10 @@ export const resetPassword = async (req, res) => {
     user.isFirstTime = false;
     await user.save();
     const token = generateToken(user);
-    return res.json({ message: "Password reset successful", token });
+    return res.json({ message: "Password Created successFully.", token });
   } catch (error) {
-    console.error("Error resetting password:", error);
-    return res.status(500).json({ error: error.message });
+    console.error("Error creating password:", error);
+    return res.status(500).json({ error: error.message ,error});
   }
 };
 
@@ -117,10 +117,9 @@ export const login = async (req, res) => {
     return res.json({ message: "Login successful", token });
   } catch (error) {
     console.error("Error logging in:", error);
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message,error });
   }
 };
-
 
 //forget password
 
@@ -146,7 +145,7 @@ export const forgotPasswordOtpSend = async (req, res) => {
       message: "Forget password ,OTP sent to your email account",
     });
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message ,error});
   }
 };
 
@@ -173,13 +172,26 @@ export const forgotPasswordOtpVerify = async (req, res) => {
 
     return res.json({ message: "OTP verified, proceed to reset password" });
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message ,error});
   }
 };
 
 export const forgetResetPassword = async (req, res) => {
   try {
     const { email, password, confirmPassword } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (user.isFirstTime) {
+      return res.status(400).json({
+        message: "First-time users need to complete OTP verification first",
+      });
+    }
+
     if (!validatePassword(password)) {
       return res.status(400).json({
         message:
@@ -199,20 +211,8 @@ export const forgetResetPassword = async (req, res) => {
         .json({ message: "Password and confirm password do not match" });
     }
 
-    const user = await User.findOne({ email });
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    if (!user.isOtpVerified && !user.forgotPasswordOtp) {
-      return res.status(400).json({
-        message:
-          "First time OTP verification is required before resetting the password",
-      });
-    }
-
     user.password = await hash(password, 10);
+
     user.isFirstTime = false;
     user.isOtpVerified = false;
     await user.save();
@@ -221,6 +221,6 @@ export const forgetResetPassword = async (req, res) => {
 
     return res.json({ message: "Password reset successful", token });
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message,error });
   }
 };
