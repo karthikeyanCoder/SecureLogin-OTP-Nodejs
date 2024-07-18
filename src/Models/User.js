@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
- 
+
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema(
@@ -12,7 +12,7 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: true,
-      minlength: [8, "Password cannot be shorter than 8 characters."],
+      unique: true,
     },
     otp: { type: String },
     forgotPasswordOtp: { type: String },
