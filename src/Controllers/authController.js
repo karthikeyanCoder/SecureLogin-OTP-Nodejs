@@ -54,7 +54,9 @@ export const verifyOtp = async (req, res) => {
     user.isOtpVerified = true;
     await user.save();
 
-    return res.json({ message: "OTP verified, proceed to create your password" });
+    return res.json({
+      message: "OTP verified, proceed to create your password",
+    });
   } catch (error) {
     return res.status(500).json({ error: error.message, error });
   }
@@ -84,6 +86,7 @@ export const createPassword = async (req, res) => {
         message: " OTP verification is required before resetting the password",
       });
     }
+
     user.password = await hash(password, 10);
     user.isFirstTime = false;
     await user.save();
@@ -91,7 +94,7 @@ export const createPassword = async (req, res) => {
     return res.json({ message: "Password Created successFully.", token });
   } catch (error) {
     console.error("Error creating password:", error);
-    return res.status(500).json({ error: error.message ,error});
+    return res.status(500).json({ error: error.message, error });
   }
 };
 
@@ -114,10 +117,10 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Invalid password" });
     }
     const token = generateToken(user);
-    return res.json({ message: "Login successful", token });
+    return res.json({ message: "Login SuccessFull. ", token });
   } catch (error) {
     console.error("Error logging in:", error);
-    return res.status(500).json({ error: error.message,error });
+    return res.status(500).json({ error: error.message, error });
   }
 };
 
@@ -145,7 +148,7 @@ export const forgotPasswordOtpSend = async (req, res) => {
       message: "Forget password ,OTP sent to your email account",
     });
   } catch (error) {
-    return res.status(500).json({ error: error.message ,error});
+    return res.status(500).json({ error: error.message, error });
   }
 };
 
@@ -172,7 +175,7 @@ export const forgotPasswordOtpVerify = async (req, res) => {
 
     return res.json({ message: "OTP verified, proceed to reset password" });
   } catch (error) {
-    return res.status(500).json({ error: error.message ,error});
+    return res.status(500).json({ error: error.message, error });
   }
 };
 
@@ -221,6 +224,6 @@ export const forgetResetPassword = async (req, res) => {
 
     return res.json({ message: "Password reset successful", token });
   } catch (error) {
-    return res.status(500).json({ error: error.message,error });
+    return res.status(500).json({ error: error.message, error });
   }
 };

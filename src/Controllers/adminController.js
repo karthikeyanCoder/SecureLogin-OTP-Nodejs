@@ -27,6 +27,6 @@ export const createUser = async (req, res) => {
     console.error("Registration failed:", error);
     return res
       .status(500)
-      .json({ message: "Registration failed. Please try again." });
+      .json({ error:error.message,error});
   }
 };
