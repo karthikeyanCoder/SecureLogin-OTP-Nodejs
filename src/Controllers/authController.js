@@ -4,11 +4,15 @@ import { randomBytes } from "crypto";
 import { hash, compare } from "bcrypt";
 import { generateToken } from "../utils/jwt.js";
 import { validatePassword } from "../utils/passwordValidator.js";
+import { validateEmail } from "../utils/emailValidator.js";
 
-export const initailLogin = async (req, res) => {
+export const validateUser = async (req, res) => {
   try {
     const { email } = req.body;
     const user = await User.findOne({ email });
+    if (!validateEmail(email)) {
+      return res.status(400).json({ message: "Invalid email format" });
+    }
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -39,6 +43,9 @@ export const verifyOtp = async (req, res) => {
   try {
     const { email, otp } = req.body;
     const user = await User.findOne({ email });
+    if (!validateEmail(email)) {
+      return res.status(400).json({ message: "Invalid email format" });
+    }
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -49,7 +56,7 @@ export const verifyOtp = async (req, res) => {
     if (!user || user.otp !== otp) {
       return res.status(400).json({ message: "Invalid OTP" });
     }
-    console.log(`OTP for user : ${email}: otps is : ${otp}`);
+    //console.log(`OTP for user : ${email}: otps is : ${otp}`);
     user.otp = null;
     user.isOtpVerified = true;
     await user.save();
@@ -65,16 +72,19 @@ export const verifyOtp = async (req, res) => {
 export const createPassword = async (req, res) => {
   try {
     const { email, password } = req.body;
+    if (!validateEmail(email)) {
+      return res.status(400).json({ message: "Invalid email format" });
+    }
     if (!password) {
       return res.status(400).json({ message: "  password are required" });
     }
     if (!validatePassword(password)) {
       return res.status(400).json({
         message:
-          "Password validation failed. It should contain at least 8 characters, 1 number, and 1 special character.",
+          "Password validation failed. It should start with a capital letter, contain at least 8 characters, 1 number, and 1 special character.",
       });
     }
-    console.log("create password request:", email, password);
+    //console.log("create password request:", email, password);
 
     const user = await User.findOne({ email });
 
@@ -102,6 +112,9 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
+    if (!validateEmail(email)) {
+      return res.status(400).json({ message: "Invalid email format" });
+    }
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -130,6 +143,9 @@ export const forgotPasswordOtpSend = async (req, res) => {
   try {
     const { email } = req.body;
     const user = await User.findOne({ email });
+    if (!validateEmail(email)) {
+      return res.status(400).json({ message: "Invalid email format" });
+    }
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -156,6 +172,9 @@ export const forgotPasswordOtpVerify = async (req, res) => {
   try {
     const { email, otp } = req.body;
     const user = await User.findOne({ email });
+    if (!validateEmail(email)) {
+      return res.status(400).json({ message: "Invalid email format" });
+    }
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -181,9 +200,12 @@ export const forgotPasswordOtpVerify = async (req, res) => {
 
 export const forgetResetPassword = async (req, res) => {
   try {
-    const { email, password, confirmPassword } = req.body;
+    const { email, password } = req.body;
 
     const user = await User.findOne({ email });
+    if (!validateEmail(email)) {
+      return res.status(400).json({ message: "Invalid email format" });
+    }
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -202,16 +224,8 @@ export const forgetResetPassword = async (req, res) => {
       });
     }
 
-    if (!password || !confirmPassword) {
-      return res
-        .status(400)
-        .json({ message: "Both password and confirm password are required" });
-    }
-
-    if (password !== confirmPassword) {
-      return res
-        .status(400)
-        .json({ message: "Password and confirm password do not match" });
+    if (!password) {
+      return res.status(400).json({ message: "Password is required." });
     }
 
     user.password = await hash(password, 10);
