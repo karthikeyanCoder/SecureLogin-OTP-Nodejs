@@ -80,8 +80,7 @@ export const createPassword = async (req, res) => {
     }
     if (!validatePassword(password)) {
       return res.status(400).json({
-        message:
-          "Password validation failed. It should start with a capital letter, contain at least 8 characters, 1 number, and 1 special character.",
+       message: "Password must be at least 8 characters long and include at least one digit, one special character, one uppercase letter, and one lowercase letter."
       });
     }
     //console.log("create password request:", email, password);

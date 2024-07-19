@@ -8,11 +8,14 @@ const verifyToken = async (req, res, next) => {
     const PATH = req.path;
 
     if (
+      PATH === "/register" || 
+
       PATH === "/validate-user" ||
       PATH === "/verify-otp" ||
+      PATH === "/create-password" ||
       PATH === "/login" ||
-      PATH === "/reset-password" ||
-      PATH === "/register" ||
+      
+     
       PATH === "/forget-password"||
       PATH === "/password-otp-verify"||
       PATH ===  "/forget-reset-password"
@@ -37,7 +40,7 @@ const verifyToken = async (req, res, next) => {
     }
     const decodedToken = jwt.verify(token, JWT_SECRET);
     req.user = decodedToken;
-    console.log("user :", decodedToken);
+    //console.log("user :", decodedToken);
     next();
   } catch (error) {
     if (error?.name === "TokenExpiredError") {

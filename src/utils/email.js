@@ -20,10 +20,11 @@ export const sendOtpEmail = async (recipient, otp) => {
        <p>Best regards,
        <br/> Your team</p>`,
     });
-    //console.log("OTP email sent successfully");
+    return { success: true, message: "OTP   sent To Email successfully" };
+   
   } catch (error) {
-    console.error("Error sending OTP email:", error);
-    throw error;
+    return { success: false, message: "Error sending OTP email.", error: error.message };
+    
   }
 };
 
