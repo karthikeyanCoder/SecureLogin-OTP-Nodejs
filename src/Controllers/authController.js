@@ -80,9 +80,10 @@ export const createPassword = async (req, res) => {
     }
     if (!validatePassword(password)) {
       return res.status(400).json({
-       message: "Password must be at least 8 characters long and include at least one digit, one special character, one uppercase letter, and one lowercase letter."
+        message: "Password must be at least 8 characters long and include at least one digit, one special character, one lowercase letter, and one uppercase letter. For example: Password1!"
       });
     }
+    
     //console.log("create password request:", email, password);
 
     const user = await User.findOne({ email });
@@ -218,10 +219,10 @@ export const forgetResetPassword = async (req, res) => {
 
     if (!validatePassword(password)) {
       return res.status(400).json({
-        message:
-          "Password validation failed. It should contain at least 8 characters, 1 number, and 1 special character.",
+        message: "Password must be at least 8 characters long and include at least one digit, one special character, one lowercase letter, and one uppercase letter. For example: Password1!"
       });
     }
+    
 
     if (!password) {
       return res.status(400).json({ message: "Password is required." });
