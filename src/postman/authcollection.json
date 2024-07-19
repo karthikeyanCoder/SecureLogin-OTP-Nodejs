@@ -16,15 +16,15 @@
           }
         ],
         "url": {
-          "raw": "{{base_url}}/register",
-          "host": ["{{base_url}}"],
+          "raw": "{{deploy_url}}/register",
+          "host": ["{{deploy_url}}"],
           "path": ["register"]
         },
         "body": {
           "mode": "raw",
           "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"Password@123\"\n}"
         },
-        "description": "This endpoint registers a new user. It expects an email and a password in the request body."
+        "description": "I created an API endpoint to register new users. This endpoint expects an email and a password in the request body. Additionally, I need to conduct personal testing to ensure the functionality and security of this endpoint."
       },
       "response": [
         {
@@ -55,15 +55,15 @@
           }
         ],
         "url": {
-          "raw": "{{base_url}}/validate-user",
-          "host": ["{{base_url}}"],
-          "path": ["first-login"]
+          "raw": "{{deploy_url}}/validate-user",
+          "host": ["{{deploy_url}}"],
+          "path": ["validate-user"]
         },
         "body": {
           "mode": "raw",
           "raw": "{\n  \"email\": \"user@example.com\"\n}"
         },
-        "description": "This endpoint handles the initial login for a user. It sends an OTP to the user's email if it is their first time logging in."
+        "description": "This endpoint handles user validation by sending an OTP to the user's email if it is their first time logging in. Our database(CLIENT) ensures that the OTP is sent only once for verification"
       },
       "response": [
         {
@@ -94,21 +94,21 @@
           }
         ],
         "url": {
-          "raw": "{{base_url}}/verify-otp",
-          "host": ["{{base_url}}"],
+          "raw": "{{deploy_url}}/verify-otp",
+          "host": ["{{deploy_url}}"],
           "path": ["verify-otp"]
         },
         "body": {
           "mode": "raw",
           "raw": "{\n  \"email\": \"user@example.com\",\n  \"otp\": \"123456\"\n}"
         },
-        "description": "This endpoint verifies the OTP sent to the user's email during initial login or password reset."
+        "description": " This endpoint verifies the OTP sent to the user's email during Validate User or password reset. Once the OTP is verified, the user can proceed to create their own password."
       },
       "response": [
         {
           "name": "OTP Verified",
           "status": "200",
-          "body": "{\n  \"message\": \"OTP verified, proceed to reset password\"\n}"
+          "body": "{\n  \"message\": \"OTP verified, proceed to Create password\"\n}"
         },
         {
           "name": "Invalid OTP",
@@ -133,15 +133,15 @@
           }
         ],
         "url": {
-          "raw": "{{base_url}}/reset-password",
-          "host": ["{{base_url}}"],
-          "path": ["reset-password"]
+          "raw": "{{deploy_url}}/create-password",
+          "host": ["{{deploy_url}}"],
+          "path": ["create-password"]
         },
         "body": {
           "mode": "raw",
           "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"NewPassword@123\",\n  \"confirmPassword\": \"NewPassword@123\"\n}"
         },
-        "description": "This endpoint resets the user's password. It expects the user's email, new password, and password confirmation in the request body."
+        "description": "This endpoint resets the user's password. It expects the user's email,  password in the request body. After the password is successfully created, a JWT token is issued, allowing the user to navigate to the Dashboard page or another designated area"
       },
       "response": [
         {
@@ -177,15 +177,15 @@
           }
         ],
         "url": {
-          "raw": "{{base_url}}/login",
-          "host": ["{{base_url}}"],
+          "raw": "{{deploy_url}}/login",
+          "host": ["{{deploy_url}}"],
           "path": ["login"]
         },
         "body": {
           "mode": "raw",
           "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"Password@123\"\n}"
         },
-        "description": "This endpoint logs in a user. It expects the user's email and password in the request body."
+        "description": "This endpoint, /login, logs in a user. It expects the user's email and password in the request body. The user's password is securely validated and stored in our database. If the password is correct, the user is directed to the Dashboard. If the user forgets or loses their password, they can easily reset it through a secure password reset process."
       },
       "response": [
         {
@@ -221,15 +221,15 @@
           }
         ],
         "url": {
-          "raw": "{{base_url}}/forget-password",
-          "host": ["{{base_url}}"],
+          "raw": "{{deploy_url}}/forget-password",
+          "host": ["{{deploy_url}}"],
           "path": ["forget-password"]
         },
         "body": {
           "mode": "raw",
           "raw": "{\n  \"email\": \"user@example.com\"\n}"
         },
-        "description": "This endpoint sends an OTP to the user's email for password reset. It expects the user's email in the request body."
+        "description": "This endpoint is designed to help users who have forgotten their password. When you provide your email in the request body, an OTP will be sent to your email. You can then use this OTP to securely reset your password."
       },
       "response": [
         {
@@ -244,8 +244,9 @@
         }
       ]
     },
+  
     {
-      "name": "Forgot Password - Verify OTP",
+      "name": "Password OTP Verify",
       "request": {
         "method": "POST",
         "header": [
@@ -255,21 +256,21 @@
           }
         ],
         "url": {
-          "raw": "{{base_url}}/password-otp-verify",
-          "host": ["{{base_url}}"],
+          "raw": "{{deploy_url}}/password-otp-verify",
+          "host": ["{{deploy_url}}"],
           "path": ["password-otp-verify"]
         },
         "body": {
           "mode": "raw",
           "raw": "{\n  \"email\": \"user@example.com\",\n  \"otp\": \"123456\"\n}"
         },
-        "description": "This endpoint verifies the OTP sent to the user's email for password reset."
+        "description": "This endpoint verifies the OTP sent to the user for password reset. It expects the user's email and the OTP in the request body. On successful verification, the user can proceed with resetting their password."
       },
       "response": [
         {
-          "name": "OTP Verified for Password Reset",
+          "name": "OTP Verified",
           "status": "200",
-          "body": "{\n  \"message\": \"OTP verified, proceed to reset password\"\n}"
+          "body": "{\n  \"message\": \"OTP verified. You can proceed to reset your password.\"\n}"
         },
         {
           "name": "Invalid OTP",
@@ -283,6 +284,7 @@
         }
       ]
     },
+
     {
       "name": "Forgot Password - Reset Password",
       "request": {
@@ -294,15 +296,15 @@
           }
         ],
         "url": {
-          "raw": "{{base_url}}/forget-reset-password",
-          "host": ["{{base_url}}"],
+          "raw": "{{deploy_url}}/forget-reset-password",
+          "host": ["{{deploy_url}}"],
           "path": ["forget-reset-password"]
         },
         "body": {
           "mode": "raw",
           "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"NewPassword@123\",\n  \"confirmPassword\": \"NewPassword@123\"\n}"
         },
-        "description": "This endpoint resets the user's password after verifying the OTP. It expects the user's email, new password, and password confirmation in the request body."
+        "description": " This endpoint allows users to reset their password after verifying the OTP. It requires the user to provide their email, a new password, and a password confirmation in the request body. Upon successfully resetting the password, the user will be redirected to the login page. After logging in with the new password, the user will receive an access token."
       },
       "response": [
         {

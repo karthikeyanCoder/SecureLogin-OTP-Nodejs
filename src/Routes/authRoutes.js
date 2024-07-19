@@ -4,7 +4,7 @@ import { validateUser, verifyOtp, createPassword, login, forgotPasswordOtpVerify
 
 router.post('/validate-user', validateUser);
 router.post('/verify-otp', verifyOtp);
-router.post('/reset-password', createPassword);
+router.post('/create-password', createPassword);
 router.post('/login', login);
 
 //forget password 
