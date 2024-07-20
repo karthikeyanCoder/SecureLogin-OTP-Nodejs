@@ -45,7 +45,7 @@
       ]
     },
     {
-      "name": "Initial Login",
+      "name": "Validate User",
       "request": {
         "method": "POST",
         "header": [
@@ -123,7 +123,7 @@
       ]
     },
     {
-      "name": "Reset Password",
+      "name": "Create Password",
       "request": {
         "method": "POST",
         "header": [
@@ -162,7 +162,7 @@
         {
           "name": "OTP Verification Required",
           "status": "400",
-          "body": "{\n  \"message\": \"First time OTP verification is required before resetting the password\"\n}"
+          "body": "{\n  \"message\": \"OTP verification is required before resetting the password\"\n}"
         }
       ]
     },
@@ -207,6 +207,11 @@
           "name": "First Time Login Requires OTP",
           "status": "400",
           "body": "{\n  \"message\": \"First-time login requires OTP verification.\"\n}"
+        },
+        {
+          "name": "Email Not Validated",
+          "status": "400",
+          "body": "{\n  \"message\": \"Email not validated\"\n}"
         }
       ]
     },
@@ -244,7 +249,7 @@
         }
       ]
     },
-  
+
     {
       "name": "Password OTP Verify",
       "request": {
@@ -286,7 +291,7 @@
     },
 
     {
-      "name": "Forgot Password - Reset Password",
+      "name": "Forgot Reset Password",
       "request": {
         "method": "POST",
         "header": [
