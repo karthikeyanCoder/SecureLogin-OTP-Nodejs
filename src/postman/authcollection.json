@@ -216,7 +216,7 @@
       ]
     },
     {
-      "name": "Forgot Password - Send OTP",
+      "name": "Forgot Password ",
       "request": {
         "method": "POST",
         "header": [
