@@ -64,7 +64,7 @@ export const verifyOtp = async (req, res) => {
     if (!user || user.otp !== otp) {
       return res.status(400).json({ success: false, message: "Invalid OTP" });
     }
-    //console.log(`OTP for user : ${email}: otps is : ${otp}`);
+    //console.log(OTP for user : ${email}: otps is : ${otp});
     user.otp = null;
     user.isOtpVerified = true;
     await user.save();
@@ -127,7 +127,7 @@ export const createPassword = async (req, res) => {
       token,
     });
   } catch (error) {
-    //console.error("Error creating password:", error);
+    console.error("Error creating password:", error);
     return res
       .status(500)
       .json({ success: false, error: error.message, error });
@@ -167,7 +167,7 @@ export const login = async (req, res) => {
       .status(200)
       .json({ success: true, message: "Login SuccessFull. ", token });
   } catch (error) {
-    //console.error("Error logging in:", error);
+    console.error("Error logging in:", error);
     return res
       .status(500)
       .json({ success: false, error: error.message, error });
