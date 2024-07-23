@@ -23,19 +23,21 @@ export const validateUser = async (req, res) => {
       user.otp = otp;
       await user.save();
       await sendOtpEmail(email, otp);
-      return res.json({
+      return res.status(200).json({
+        succes: true,
         message: "OTP sent to your Email account",
         isFirstTime: true,
       });
     } else {
       //const token = generateToken(user);
-      return res.json({
+      return res.status(200).json({
+        success: true,
         message: "Returning user.you can Redirect to login page ",
         isFirstTime: false,
       });
     }
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ success: false, error: error.message });
   }
 };
 
@@ -44,28 +46,37 @@ export const verifyOtp = async (req, res) => {
     const { email, otp } = req.body;
     const user = await User.findOne({ email });
     if (!validateEmail(email)) {
-      return res.status(400).json({ message: "Invalid email format" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid email format" });
     }
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
     if (!user.isFirstTime) {
-      return res.status(400).json({ message: "your not from validate user ." });
+      return res
+        .status(400)
+        .json({ success: false, message: "your not from validate user ." });
     }
 
     if (!user || user.otp !== otp) {
-      return res.status(400).json({ message: "Invalid OTP" });
+      return res.status(400).json({ success: false, message: "Invalid OTP" });
     }
     //console.log(`OTP for user : ${email}: otps is : ${otp}`);
     user.otp = null;
     user.isOtpVerified = true;
     await user.save();
 
-    return res.json({
+    return res.status(200).json({
+      success: true,
       message: "OTP verified, proceed to create your password",
     });
   } catch (error) {
-    return res.status(500).json({ error: error.message, error });
+    return res
+      .status(500)
+      .json({ success: false, error: error.message, error });
   }
 };
 
@@ -73,13 +84,18 @@ export const createPassword = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!validateEmail(email)) {
-      return res.status(400).json({ message: "Invalid email format" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid email format" });
     }
     if (!password) {
-      return res.status(400).json({ message: "  password are required" });
+      return res
+        .status(400)
+        .json({ success: false, message: "  password are required" });
     }
     if (!validatePassword(password)) {
       return res.status(400).json({
+        success: false,
         message:
           "Password must be at least 8 characters long and include at least one digit, one special character, one lowercase letter, and one uppercase letter. For example: Password1!",
       });
@@ -90,10 +106,13 @@ export const createPassword = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
     if (!user.isOtpVerified) {
       return res.status(400).json({
+        success: false,
         message: " OTP verification is required before resetting the password",
       });
     }
@@ -102,10 +121,16 @@ export const createPassword = async (req, res) => {
     user.isFirstTime = false;
     await user.save();
     const token = generateToken(user);
-    return res.json({ message: "Password Created successFully.", token });
+    return res.status(200).json({
+      success: true,
+      message: "Password Created successFully.",
+      token,
+    });
   } catch (error) {
-    console.error("Error creating password:", error);
-    return res.status(500).json({ error: error.message, error });
+    //console.error("Error creating password:", error);
+    return res
+      .status(500)
+      .json({ success: false, error: error.message, error });
   }
 };
 
@@ -114,27 +139,38 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!validateEmail(email)) {
-      return res.status(400).json({ message: "Invalid email format" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid email format" });
     }
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
     if (user.isFirstTime) {
-      return res
-        .status(400)
-        .json({ message: "First-time login requires OTP verification." });
+      return res.status(400).json({
+        success: false,
+        message: "First-time login requires OTP verification.",
+      });
     }
     const isMatch = await compare(password, user.password);
 
     if (!isMatch) {
-      return res.status(400).json({ message: "Invalid password" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid password" });
     }
     const token = generateToken(user);
-    return res.json({ message: "Login SuccessFull. ", token });
+    return res
+      .status(200)
+      .json({ success: true, message: "Login SuccessFull. ", token });
   } catch (error) {
-    console.error("Error logging in:", error);
-    return res.status(500).json({ error: error.message, error });
+    //console.error("Error logging in:", error);
+    return res
+      .status(500)
+      .json({ success: false, error: error.message, error });
   }
 };
 
@@ -145,11 +181,15 @@ export const forgotPasswordOtpSend = async (req, res) => {
     const { email } = req.body;
     const user = await User.findOne({ email });
     if (!validateEmail(email)) {
-      return res.status(400).json({ message: "Invalid email format" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid email format" });
     }
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     const otp = randomBytes(3).toString("hex");
@@ -161,11 +201,14 @@ export const forgotPasswordOtpSend = async (req, res) => {
 
     await sendOtpEmail(email, otp);
 
-    return res.json({
+    return res.status(200).json({
+      success: true,
       message: "Forget password ,OTP sent to your email account",
     });
   } catch (error) {
-    return res.status(500).json({ error: error.message, error });
+    return res
+      .status(500)
+      .json({ success: false, error: error.message, error });
   }
 };
 
@@ -174,28 +217,41 @@ export const forgotPasswordOtpVerify = async (req, res) => {
     const { email, otp } = req.body;
     const user = await User.findOne({ email });
     if (!validateEmail(email)) {
-      return res.status(400).json({ message: "Invalid email format" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid email format" });
     }
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     if (!user.forgotPasswordOtp || user.forgotPasswordOtp !== otp) {
-      return res.status(400).json({ message: "Invalid or expired OTP" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid or expired OTP" });
     }
 
     if (user.otpExpires < Date.now()) {
-      return res.status(400).json({ message: "OTP has expired" });
+      return res
+        .status(400)
+        .json({ success: false, message: "OTP has expired" });
     }
 
     user.forgotPasswordOtp = null;
     user.otpExpires = null;
     await user.save();
 
-    return res.json({ message: "OTP verified, proceed to reset password" });
+    return res.status(200).json({
+      success: true,
+      message: "OTP verified, proceed to reset password",
+    });
   } catch (error) {
-    return res.status(500).json({ error: error.message, error });
+    return res
+      .status(500)
+      .json({ success: false, error: error.message, error });
   }
 };
 
@@ -205,28 +261,36 @@ export const forgetResetPassword = async (req, res) => {
 
     const user = await User.findOne({ email });
     if (!validateEmail(email)) {
-      return res.status(400).json({ message: "Invalid email format" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid email format" });
     }
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     if (user.isFirstTime) {
       return res.status(400).json({
+        success: false,
         message: "First-time users need to complete OTP verification first",
       });
     }
 
     if (!validatePassword(password)) {
       return res.status(400).json({
+        success: false,
         message:
           "Password must be at least 8 characters long and include at least one digit, one special character, one lowercase letter, and one uppercase letter. For example: Password1!",
       });
     }
 
     if (!password) {
-      return res.status(400).json({ message: "Password is required." });
+      return res
+        .status(400)
+        .json({ success: false, message: "Password is required." });
     }
 
     user.password = await hash(password, 10);
@@ -237,8 +301,12 @@ export const forgetResetPassword = async (req, res) => {
 
     const token = generateToken(user);
 
-    return res.json({ message: "Password reset successful", token });
+    return res
+      .status(200)
+      .json({ success: true, message: "Password reset successful", token });
   } catch (error) {
-    return res.status(500).json({ error: error.message, error });
+    return res
+      .status(500)
+      .json({ success: false, error: error.message, error });
   }
 };
