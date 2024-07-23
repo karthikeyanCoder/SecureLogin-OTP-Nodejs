@@ -11,11 +11,11 @@ export const validateUser = async (req, res) => {
     const { email } = req.body;
     const user = await User.findOne({ email });
     if (!validateEmail(email)) {
-      return res.status(400).json({ message: "Invalid email format" });
+      return res.status(400).json({success:false, message: "Invalid email format" });
     }
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({success:false, message: "User not found" });
     }
 
     if (user.isFirstTime) {
@@ -24,7 +24,7 @@ export const validateUser = async (req, res) => {
       await user.save();
       await sendOtpEmail(email, otp);
       return res.status(200).json({
-        succes: true,
+        success: true,
         message: "OTP sent to your Email account",
         isFirstTime: true,
       });
