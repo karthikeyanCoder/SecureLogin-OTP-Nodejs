@@ -1,0 +1,165 @@
+{
+  "info": {
+    "name": "Mapping API Collection",
+    "description": "Postman collection for Mapping APIs",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "variable": [
+      {
+        "key": "baseUrl",
+        "value": "https://robot-backend.onrender.com",
+        "description": "Base URL for the API endpoints"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Start Mapping",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"userId\": \"669b5aa087b1ae9f4d3b336f\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/start-mapping",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "start-mapping"
+          ]
+        }
+      },
+      "response": [
+        {
+          "status": "200 OK",
+          "code": 200,
+          "body": "{\n  \"success\": true,\n  \"message\": \"Mapping started successfully.\",\n  \"userId\": \"669b5aa087b1ae9f4d3b336f\"\n}",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        {
+          "status": "500 Internal Server Error",
+          "code": 500,
+          "body": "{\n  \"success\": false,\n  \"message\": \"An error occurred while starting the mapping process.\",\n  \"error\": \"Error message here\"\n}",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Save Mapping Data",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"userId\": \"669b5aa087b1ae9f4d3b336f\",\n  \"robotId\": \"0001\",\n  \"mode\": \"active\",\n  \"feedback\": \"Mapping in progress\",\n  \"linear_velocity\": {\n    \"x\": 1.2,\n    \"y\": 0.5,\n    \"z\": 0.3\n  },\n  \"angular_velocity\": {\n    \"x\": 0.1,\n    \"y\": 0.2,\n    \"z\": 0.3\n  },\n  \"current_position\": {\n    \"x\": 5.0,\n    \"y\": 2.5,\n    \"z\": 1.0\n  },\n  \"current_orientation\": {\n    \"x\": 0.1,\n    \"y\": 0.2,\n    \"z\": 0.3,\n    \"w\": 0.4\n  },\n  \"map_image\": \"base64string\",\n  \"completion_command\": \"Completed\",\n  \"map_name\": \"Map1\",\n  \"timeTaken\": \"30 minutes\",\n  \"status\": \"completed\",\n  \"percentageCompleted\": 100\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/save-mapping-data",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "save-mapping-data"
+          ]
+        }
+      },
+      "response": [
+        {
+          "status": "201 Created",
+          "code": 201,
+          "body": "{\n  \"success\": true,\n  \"message\": \"Mapping data saved successfully.\",\n  \"data\": {\n    \"userId\": \"64b5c0f5e3f5e1e62d1e2b39\",\n    \"robotId\": \"0001\",\n    \"mode\": \"active\",\n    \"feedback\": \"Mapping in progress\",\n    \"linear_velocity\": {\n      \"x\": 1.2,\n      \"y\": 0.5,\n      \"z\": 0.3\n    },\n    \"angular_velocity\": {\n      \"x\": 0.1,\n      \"y\": 0.2,\n      \"z\": 0.3\n    },\n    \"current_position\": {\n      \"x\": 5.0,\n      \"y\": 2.5,\n      \"z\": 1.0\n    },\n    \"current_orientation\": {\n      \"x\": 0.1,\n      \"y\": 0.2,\n      \"z\": 0.3,\n      \"w\": 0.4\n    },\n    \"map_image\": \"base64string\",\n    \"completion_command\": \"Completed\",\n    \"map_name\": \"Map1\",\n    \"timeTaken\": \"30 minutes\",\n    \"status\": \"completed\",\n    \"percentageCompleted\": 100,\n    \"date\": \"2024-08-05T00:00:00.000Z\",\n    \"createdAt\": \"2024-08-05T00:00:00.000Z\",\n    \"updatedAt\": \"2024-08-05T00:00:00.000Z\"\n  }\n}",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        {
+          "status": "400 Bad Request",
+          "code": 400,
+          "body": "{\n  \"success\": false,\n  \"message\": \"All required fields must be provided and valid.\",\n  \"error\": \"Error message here\"\n}",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        {
+          "status": "500 Internal Server Error",
+          "code": 500,
+          "body": "{\n  \"success\": false,\n  \"message\": \"An error occurred while saving mapping data.\",\n  \"error\": \"Error message here\"\n}",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Get List Maps",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/get-list-maps?userId=669b5aa087b1ae9f4d3b336f&robotId=0001",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "get-list-maps"
+          ],
+          "query": [
+            {
+              "key": "userId",
+              "value": "669b5aa087b1ae9f4d3b336f"
+            },
+            {
+              "key": "robotId",
+              "value": "0001"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "status": "200 OK",
+          "code": 200,
+          "body": "{\n  \"success\": true,\n  \"message\": \"Maps retrieved successfully.\",\n  \"data\": [\n    {\n      \"userId\": \"64b5c0f5e3f5e1e62d1e2b39\",\n      \"robotId\": \"0001\",\n      \"mode\": \"active\",\n      \"feedback\": \"Mapping in progress\",\n      \"linear_velocity\": {\n        \"x\": 1.2,\n        \"y\": 0.5,\n        \"z\": 0.3\n      },\n      \"angular_velocity\": {\n        \"x\": 0.1,\n        \"y\": 0.2,\n        \"z\": 0.3\n      },\n      \"current_position\": {\n        \"x\": 5.0,\n        \"y\": 2.5,\n        \"z\": 1.0\n      },\n      \"current_orientation\": {\n        \"x\": 0.1,\n        \"y\": 0.2,\n        \"z\": 0.3,\n        \"w\": 0.4\n      },\n      \"map_image\": \"data:image/png;base64,base64string\",\n      \"completion_command\": \"Completed\",\n      \"map_name\": \"Map1\",\n      \"timeTaken\": \"30 minutes\",\n      \"status\": \"completed\",\n      \"percentageCompleted\": 100,\n      \"date\": \"2024-08-05T00:00:00.000Z\",\n      \"createdAt\": \"2024-08-05T00:00:00.000Z\",\n      \"updatedAt\": \"2024-08-05T00:00:00.000Z\"\n    }\n  ]\n}",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        {
+          "status": "404 Not Found",
+          "code": 404,
+          "body": "{\n  \"success\": false,\n  \"message\": \"No maps found for the specified user and robot.\",\n  \"error\": \"Error message here\"\n}",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

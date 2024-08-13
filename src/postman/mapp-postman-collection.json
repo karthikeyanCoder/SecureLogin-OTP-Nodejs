@@ -1,0 +1,128 @@
+{
+  "info": {
+    "name": "Robot Mapping API",
+    "description": "This collection contains API endpoints for managing robot mapping processes, including starting mapping, saving mapping data, and listing saved maps.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Start Mapping",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"userId\": \"<user_id>\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/start-mapping",
+          "host": ["{{baseUrl}}"],
+          "path": ["start-mapping"]
+        }
+      },
+      "response": [
+        {
+          "status": "200 OK",
+          "code": 200,
+          "body": "{\n  \"success\": true,\n  \"message\": \"Mapping started successfully.\",\n  \"userId\": \"<user_id>\"\n}",
+          "header": []
+        },
+        {
+          "status": "500 Internal Server Error",
+          "code": 500,
+          "body": "{\n  \"success\": false,\n  \"message\": \"An error occurred while starting the mapping process.\",\n  \"error\": \"<error_message>\"\n}",
+          "header": []
+        }
+      ],
+      "description": "Starts the mapping process for a given user. Requires a `userId` in the request body."
+    },
+    {
+      "name": "Save Mapping Data",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"userId\": \"<user_id>\",\n  \"mode\": \"<mode>\",\n  \"feedback\": \"<feedback>\",\n  \"linear_velocity\": {\n    \"x\": <value>,\n    \"y\": <value>,\n    \"z\": <value>\n  },\n  \"angular_velocity\": {\n    \"x\": <value>,\n    \"y\": <value>,\n    \"z\": <value>\n  },\n  \"current_position\": {\n    \"x\": <value>,\n    \"y\": <value>,\n    \"z\": <value>\n  },\n  \"current_orientation\": {\n    \"x\": <value>,\n    \"y\": <value>,\n    \"z\": <value>,\n    \"w\": <value>\n  },\n  \"map_image\": \"<map_image_url>\",\n  \"completion_command\": \"<completion_command>\",\n  \"map_name\": \"<map_name>\",\n  \"timeTaken\": \"<time_taken>\",\n  \"status\": \"<status>\",\n  \"percentageCompleted\": <value>\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/save-mapping-data",
+          "host": ["{{baseUrl}}"],
+          "path": ["save-mapping-data"]
+        }
+      },
+      "response": [
+        {
+          "status": "201 Created",
+          "code": 201,
+          "body": "{\n  \"success\": true,\n  \"message\": \"Mapping data saved successfully.\",\n  \"data\": {\n    \"userId\": \"<user_id>\",\n    \"mode\": \"<mode>\",\n    \"feedback\": \"<feedback>\",\n    \"linear_velocity\": {\n      \"x\": <value>,\n      \"y\": <value>,\n      \"z\": <value>\n    },\n    \"angular_velocity\": {\n      \"x\": <value>,\n      \"y\": <value>,\n      \"z\": <value>\n    },\n    \"current_position\": {\n      \"x\": <value>,\n      \"y\": <value>,\n      \"z\": <value>\n    },\n    \"current_orientation\": {\n      \"x\": <value>,\n      \"y\": <value>,\n      \"z\": <value>,\n      \"w\": <value>\n    },\n    \"map_image\": \"<map_image_url>\",\n    \"completion_command\": \"<completion_command>\",\n    \"map_name\": \"<map_name>\",\n    \"timeTaken\": \"<time_taken>\",\n    \"status\": \"<status>\",\n    \"percentageCompleted\": <value>\n  }\n}",
+          "header": []
+        },
+        {
+          "status": "500 Internal Server Error",
+          "code": 500,
+          "body": "{\n  \"success\": false,\n  \"message\": \"An error occurred while saving mapping data.\",\n  \"error\": \"<error_message>\"\n}",
+          "header": []
+        }
+      ],
+      "description": "Saves mapping data for a user. Requires several fields including `userId`, `mode`, `feedback`, `linear_velocity`, `angular_velocity`, `current_position`, `current_orientation`, `map_image`, `completion_command`, `map_name`, `timeTaken`, `status`, and `percentageCompleted`."
+    },
+    {
+      "name": "List Maps",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/list-maps",
+          "host": ["{{baseUrl}}"],
+          "path": ["list-maps"],
+          "query": [
+            {
+              "key": "userId",
+              "value": "<user_id>"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "status": "200 OK",
+          "code": 200,
+          "body": "{\n  \"success\": true,\n  \"message\": \"Maps retrieved successfully.\",\n  \"data\": [\n    {\n      \"userId\": \"<user_id>\",\n      \"mode\": \"<mode>\",\n      \"feedback\": \"<feedback>\",\n      \"linear_velocity\": {\n        \"x\": <value>,\n        \"y\": <value>,\n        \"z\": <value>\n      },\n      \"angular_velocity\": {\n        \"x\": <value>,\n        \"y\": <value>,\n        \"z\": <value>\n      },\n      \"current_position\": {\n        \"x\": <value>,\n        \"y\": <value>,\n        \"z\": <value>\n      },\n      \"current_orientation\": {\n        \"x\": <value>,\n        \"y\": <value>,\n        \"z\": <value>,\n        \"w\": <value>\n      },\n      \"map_image\": \"<map_image_url>\",\n      \"map_name\": \"<map_name>\",\n      \"completion_command\": \"<completion_command>\",\n      \"timeTaken\": \"<time_taken>\",\n      \"status\": \"<status>\",\n      \"percentageCompleted\": <value>\n    }\n  ]\n}",
+          "header": []
+        },
+        {
+          "status": "400 Bad Request",
+          "code": 400,
+          "body": "{\n  \"error\": \"userId is required.\"\n}",
+          "header": []
+        },
+        {
+          "status": "500 Internal Server Error",
+          "code": 500,
+          "body": "{\n  \"success\": false,\n  \"message\": \"An error occurred while retrieving maps.\",\n  \"error\": \"<error_message>\"\n}",
+          "header": []
+        }
+      ],
+      "description": "Retrieves a list of maps for a specified user. Requires `userId` as a query parameter."
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://robot-backend.onrender.com",
+      "description": "The base URL for the API."
+    }
+  ]
+}
+
