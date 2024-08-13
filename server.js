@@ -5,7 +5,7 @@ import authRoutes from "./src/Routes/authRoutes.js";
 import { verifyToken } from "./src/Middleware/authMiddleware.js";
 import cors from "cors";
 import adminRouter from "./src/Routes/adminRoutes.js";
-import robotRouter  from "./src/Routes/robotRoutes.js";
+import startMappingRouters  from  "./src/Routes/startMappingRoutes.js"
 dotenv.config();
 const PORT = process.env.PORT || 8080;
 
@@ -15,7 +15,8 @@ app.use(express.json());
 app.use(verifyToken);
 app.use("/", authRoutes);
 app.use("/",adminRouter);
-app.use('/',robotRouter);
+app.use('/',startMappingRouters);
+
 
 app.listen(PORT, async () => {
   await connectDB();
