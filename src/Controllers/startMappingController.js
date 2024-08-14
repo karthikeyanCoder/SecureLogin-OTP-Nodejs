@@ -219,9 +219,15 @@ export const getListMaps = async (req, res) => {
         message: "No mapping data found.",
       });
     }
+    const decodedMappingData = mappingData.map((data) => {
+      return {
+        ...data._doc,
+        map_image: `data:image/png;base64,${data.map_image}`,
+      };
+    });
     return res.status(200).json({
       success: true,
-      data: mappingData,
+      data: decodedMappingData,
     });
   } catch (error) {
     //console.error("Error retrieving mapping data:", error.message);
