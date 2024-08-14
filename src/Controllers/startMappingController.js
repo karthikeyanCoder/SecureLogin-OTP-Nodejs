@@ -190,57 +190,50 @@ export const saveMappingData = async (req, res) => {
   }
 };
 
+
+
+
 export const getListMaps = async (req, res) => {
   try {
-    const { userId, robotId } = req.query;
+    const { userId, robotId } = req.query; 
 
-    if (!userId || !robotId) {
+  
+    if (!robotId || !ROBOT_IDS.includes(robotId)) {
       return res.status(400).json({
         success: false,
-        message: "Missing parameters: userId or robotId",
+        message: "Invalid or missing robotId.",
       });
     }
 
-    if (robotId && !ROBOT_IDS.includes(robotId)) {
+    
+    if (!userId) {
       return res.status(400).json({
         success: false,
-        message: "Invalid robotId provided.",
+        message: "Missing userId.",
       });
     }
 
-    const query = { userId };
-    if (robotId) {
-      query.robotId = robotId;
-    }
+    
+    const mappingData = await StartMappingData.findOne({ userId, robotId });
 
-    const maps = await StartMappingData.find(query);
-
-    if (maps.length === 0) {
+  
+    if (!mappingData) {
       return res.status(404).json({
-        success: true,
-        message: "No maps available. Please start your mapping first.",
+        success: false,
+        message: "No mapping data found for the provided userId and robotId.",
       });
     }
-
-    const mappedData = maps.map((map) => {
-      return {
-        ...map._doc,
-        disinfectionRecords: map.disinfectionRecords.map((record) => ({
-          ...record,
-          map_image: `data:image/png;base64,${record.map_image}`,
-        })),
-      };
-    });
 
     return res.status(200).json({
       success: true,
-      message: "Maps retrieved successfully.",
-      data: mappedData,
+      message: "Mapping data retrieved successfully.",
+      data: mappingData,
     });
   } catch (error) {
+    console.error("Error retrieving mapping data:", error.message);
     return res.status(500).json({
       success: false,
-      message: "An error occurred while retrieving maps.",
+      message: "An error occurred while retrieving mapping data.",
       error: error.message,
     });
   }
