@@ -1,5 +1,6 @@
 import StartMappingData from "../Models/startMapping.js";
 import { Buffer } from "buffer";
+import mongoose from 'mongoose';
 const ROBOT_IDS = [
   "0001",
   "0002",
@@ -190,47 +191,40 @@ export const saveMappingData = async (req, res) => {
   }
 };
 
-
-
-
 export const getListMaps = async (req, res) => {
   try {
-    const { userId, robotId } = req.query; 
+    const { userId, robotId } = req.query;
+    //console.log("user request query is:", req.query);
 
-  
-    if (!robotId || !ROBOT_IDS.includes(robotId)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid or missing robotId.",
-      });
+    const query = {};
+    if (userId) {
+      
+      if (mongoose.Types.ObjectId.isValid(userId)) {
+        query.userId = new mongoose.Types.ObjectId(userId);
+      } else {
+       
+        query.userId = userId;
+      }
     }
-
+    if (robotId) query.robotId = robotId;
     
-    if (!userId) {
-      return res.status(400).json({
-        success: false,
-        message: "Missing userId.",
-      });
-    }
+    //console.log("query is", query);
 
-    
-    const mappingData = await StartMappingData.findOne({ userId, robotId });
+    const mappingData = await StartMappingData.find(query).exec();
+    //console.log("mapping data,", mappingData);
 
-  
-    if (!mappingData) {
+    if (!mappingData || mappingData.length === 0) {
       return res.status(404).json({
         success: false,
-        message: "No mapping data found for the provided userId and robotId.",
+        message: "No mapping data found.",
       });
     }
-
     return res.status(200).json({
       success: true,
-      message: "Mapping data retrieved successfully.",
       data: mappingData,
     });
   } catch (error) {
-    console.error("Error retrieving mapping data:", error.message);
+    //console.error("Error retrieving mapping data:", error.message);
     return res.status(500).json({
       success: false,
       message: "An error occurred while retrieving mapping data.",
