@@ -39,9 +39,9 @@ export const saveMappingData = async (req, res) => {
       mode,
       feedback,
       linear_velocity = [],
-      angular_velocity = [], 
-      current_position = [], 
-      current_orientation = [], 
+      angular_velocity = [],
+      current_position = [],
+      current_orientation = [],
       map_image,
       completion_command,
       map_name,
@@ -80,31 +80,76 @@ export const saveMappingData = async (req, res) => {
           "Missing required fields or invalid data types. Ensure all fields are provided and contain valid data.",
       });
     }
-    if (!Array.isArray(linear_velocity) || !linear_velocity.every(item => typeof item === 'object' && item !== null && 'x' in item && 'y' in item && 'z' in item)) {
+    if (
+      !Array.isArray(linear_velocity) ||
+      !linear_velocity.every(
+        (item) =>
+          typeof item === "object" &&
+          item !== null &&
+          "x" in item &&
+          "y" in item &&
+          "z" in item
+      )
+    ) {
       return res.status(400).json({
         success: false,
-        message: "linear_velocity should be an array of objects with x, y, z properties.",
+        message:
+          "linear_velocity should be an array of objects with x, y, z properties.",
       });
     }
 
-    if (!Array.isArray(angular_velocity) || !angular_velocity.every(item => typeof item === 'object' && item !== null && 'x' in item && 'y' in item && 'z' in item)) {
+    if (
+      !Array.isArray(angular_velocity) ||
+      !angular_velocity.every(
+        (item) =>
+          typeof item === "object" &&
+          item !== null &&
+          "x" in item &&
+          "y" in item &&
+          "z" in item
+      )
+    ) {
       return res.status(400).json({
         success: false,
-        message: "angular_velocity should be an array of objects with x, y, z properties.",
+        message:
+          "angular_velocity should be an array of objects with x, y, z properties.",
       });
     }
 
-    if (!Array.isArray(current_position) || !current_position.every(item => typeof item === 'object' && item !== null && 'x' in item && 'y' in item && 'z' in item)) {
+    if (
+      !Array.isArray(current_position) ||
+      !current_position.every(
+        (item) =>
+          typeof item === "object" &&
+          item !== null &&
+          "x" in item &&
+          "y" in item &&
+          "z" in item
+      )
+    ) {
       return res.status(400).json({
         success: false,
-        message: "current_position should be an array of objects with x, y, z properties.",
+        message:
+          "current_position should be an array of objects with x, y, z properties.",
       });
     }
 
-    if (!Array.isArray(current_orientation) || !current_orientation.every(item => typeof item === 'object' && item !== null && 'x' in item && 'y' in item && 'z' in item && 'w' in item)) {
+    if (
+      !Array.isArray(current_orientation) ||
+      !current_orientation.every(
+        (item) =>
+          typeof item === "object" &&
+          item !== null &&
+          "x" in item &&
+          "y" in item &&
+          "z" in item &&
+          "w" in item
+      )
+    ) {
       return res.status(400).json({
         success: false,
-        message: "current_orientation should be an array of objects with x, y, z, w properties.",
+        message:
+          "current_orientation should be an array of objects with x, y, z, w properties.",
       });
     }
     const imageBase64 = Buffer.from(map_image, "base64").toString("base64");
@@ -144,7 +189,6 @@ export const saveMappingData = async (req, res) => {
     });
   }
 };
-
 
 export const getListMaps = async (req, res) => {
   try {
@@ -201,5 +245,3 @@ export const getListMaps = async (req, res) => {
     });
   }
 };
-
-
