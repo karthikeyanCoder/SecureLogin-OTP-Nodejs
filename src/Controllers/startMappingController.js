@@ -265,7 +265,7 @@ export const getMapNames = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      data: uniqueMapNames,
+      MapName: uniqueMapNames,
     });
   } catch (error) {
     console.error("Error retrieving unique map names:", error.message);
