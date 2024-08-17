@@ -259,13 +259,14 @@ export const getMapNames = async (req, res) => {
         message: "Invalid userId format.",
       });
     }
-
-    // Fetch distinct map names
-    const uniqueMapNames = await StartMappingData.distinct("map_name", { userId: new mongoose.Types.ObjectId(userId) });
+    const uniqueMapNames = await StartMappingData.find(
+      { userId: new mongoose.Types.ObjectId(userId) },
+      { map_name: 1, _id: 0 }  
+    );
 
     return res.status(200).json({
       success: true,
-      MapName: uniqueMapNames,
+      MapNames: uniqueMapNames,
     });
   } catch (error) {
     console.error("Error retrieving unique map names:", error.message);
