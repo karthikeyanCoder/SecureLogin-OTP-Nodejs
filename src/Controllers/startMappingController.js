@@ -238,3 +238,41 @@ export const getListMaps = async (req, res) => {
     });
   }
 };
+
+
+
+
+export const getMapNames = async (req, res) => {
+  try {
+    const { userId } = req.query;
+
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing userId parameter.",
+      });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid userId format.",
+      });
+    }
+
+    // Fetch distinct map names
+    const uniqueMapNames = await StartMappingData.distinct("map_name", { userId: new mongoose.Types.ObjectId(userId) });
+
+    return res.status(200).json({
+      success: true,
+      data: uniqueMapNames,
+    });
+  } catch (error) {
+    console.error("Error retrieving unique map names:", error.message);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while retrieving unique map names.",
+      error: error.message,
+    });
+  }
+};
