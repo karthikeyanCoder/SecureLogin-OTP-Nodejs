@@ -7,6 +7,7 @@ import cors from "cors";
 import adminRouter from "./src/Routes/adminRoutes.js";
 import startMappingRouters  from  "./src/Routes/startMappingRoutes.js"
 import startMapping from "./src/Routes/startMapping.js"
+import autoMatic from "./src/Routes/autoMatic.js"
 dotenv.config();
 const PORT = process.env.PORT || 8080;
 
@@ -18,6 +19,7 @@ app.use("/", authRoutes);
 app.use("/",adminRouter);
 app.use('/',startMappingRouters);
 app.use("/",startMapping)
+app.use("/",autoMatic)
 
 app.listen(PORT, async () => {
   await connectDB();
