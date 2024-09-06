@@ -1,12 +1,12 @@
-import express from 'express';
- 
-import { saveAutomatedDisinfectantData,getAutomatedDisinfectantData } from '../Controllers/autoMatic.js';
+import { Router } from "express";
+import { saveMappingData ,getManualMapping, getAutomaticMapping, getAutomaticDisinfectMapping} from "../Controllers/autoMatic.js"
 
+const router = Router();
+router.post("/start-mapping", saveMappingData);
  
-const router = express.Router();
- 
-router.post("/automated-disinfectant",   saveAutomatedDisinfectantData);
 
-router.get("/get-automated-disinfectant",getAutomatedDisinfectantData)
-
+//get mode api
+router.get("/get-manual-mapping",getManualMapping)
+router.get("/get-automatic-mapping",getAutomaticMapping) 
+router.get("/get-automatic-disinfect-mapping",getAutomaticDisinfectMapping)
 export default router;
