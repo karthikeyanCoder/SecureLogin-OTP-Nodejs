@@ -38,7 +38,7 @@ export const saveMappingData = async (req, res) => {
       object_feedback,
     } = req.body;
 
-    console.log("user request body:", req.body);
+    //console.log("user request body:", req.body);
 
     if (
       !mode ||
@@ -145,7 +145,7 @@ export const saveMappingData = async (req, res) => {
       });
 
       await history.save();
-      console.log("manual mapping data is:", history);
+      //console.log("manual mapping data is:", history);
       return res.status(201).json({
         success: true,
         message: "Manual mapping data saved successfully.",
@@ -179,7 +179,7 @@ export const saveMappingData = async (req, res) => {
       });
 
       await disinfectantData.save();
-      console.log("Automated Disinfectant data is:", disinfectantData);
+      //console.log("Automated Disinfectant data is:", disinfectantData);
       return res.status(201).json({
         success: true,
         message: "Automated Disinfectant data saved successfully.",
@@ -204,7 +204,7 @@ export const getAutomaticMapping = async (req, res) => {
       success: true,
       data: data.map((entry) => ({
         ...entry._doc,
-        map_image: `data:image/png;base64,${entry.map_image}`, // Update here
+        map_image: `data:image/png;base64,${entry.map_image}`,  
       })),
     });
   } catch (error) {
@@ -223,7 +223,7 @@ export const getManualMapping = async (req, res) => {
       success: true,
       data: data.map((entry) => ({
         ...entry._doc,
-        image: `data:image/png;base64,${entry.image}`, // Update here
+        image: `data:image/png;base64,${entry.image}`,  
       })),
     });
   } catch (error) {

@@ -2,7 +2,7 @@ import { Router } from "express";
 import { saveMappingData ,getManualMapping, getAutomaticMapping, getAutomaticDisinfectMapping} from "../Controllers/autoMatic.js"
 
 const router = Router();
-router.post("/start-mapping", saveMappingData);
+router.post("/start-mappings", saveMappingData);
  
 
 //get mode api
