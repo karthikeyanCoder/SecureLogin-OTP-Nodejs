@@ -42,34 +42,22 @@ export const checkForUpdate = async (req, res) => {
     const latestVersion = LATEST_VERSION.version;
 
     if (currentVersion < latestVersion) {
-      if (currentVersion === "1.0") {
-        user.lastUpdateNotification = new Date();
-        await user.save();
+      const now = new Date();
+      const notificationInterval = 30 * 60 * 1000; 
+
+     
+      if (!user.lastUpdateNotification || now - user.lastUpdateNotification > notificationInterval) {
+        user.lastUpdateNotification = now;  
+        await user.save();  
 
         return res.status(200).json({
           success: true,
           message: `A newer version (${latestVersion}) is available. Please update your App.`,
         });
-      }
-
-      const now = new Date();
-      const notificationInterval = 30 * 60 * 1000;
-
-      if (
-        !user.lastUpdateNotification ||
-        now - user.lastUpdateNotification > notificationInterval
-      ) {
-        user.lastUpdateNotification = now;
-        await user.save();
-
-        return res.status(200).json({
-          success: true,
-          message: ` newer version (${latestVersion}) is available. Please update your App.`,
-        });
       } else {
         return res.status(200).json({
           success: true,
-          message: "You have already been notified about the new version.",
+          message: "veru thing upto date ",
         });
       }
     } else {
