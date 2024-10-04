@@ -18,6 +18,8 @@ const userSchema = new Schema(
     forgotPasswordOtp: { type: String },
     isFirstTime: { type: Boolean, default: true },
     isOtpVerified: { type: Boolean, default: false },
+    currentVersion: { type: String, default: "1.0" },
+    lastUpdateNotification: { type: Date },
   },
   { timestamps: true }
 );

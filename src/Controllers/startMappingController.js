@@ -194,7 +194,7 @@ export const saveMappingData = async (req, res) => {
 export const getListMaps = async (req, res) => {
   try {
     const { userId, robotId } = req.query;
-    //console.log("user request query is:", req.query);
+    console.log("user request query is:", req.query);
 
     const query = {};
     if (userId) {
@@ -208,10 +208,10 @@ export const getListMaps = async (req, res) => {
     }
     if (robotId) query.robotId = robotId;
     
-    //console.log("query is", query);
+    console.log("query is", query);
 
     const mappingData = await StartMappingData.find(query).exec();
-    //console.log("mapping data,", mappingData);
+    console.log("mapping data,", mappingData);
 
     if (!mappingData || mappingData.length === 0) {
       return res.status(404).json({

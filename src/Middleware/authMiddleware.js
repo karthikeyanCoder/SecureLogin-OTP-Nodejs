@@ -8,18 +8,14 @@ const verifyToken = async (req, res, next) => {
     const PATH = req.path;
 
     if (
-      PATH === "/register" ||  
-
+      PATH === "/register" ||
       PATH === "/validate-user" ||
       PATH === "/verify-otp" ||
       PATH === "/create-password" ||
       PATH === "/login" ||
-      
-     
-      PATH === "/forget-password"||
-      PATH === "/password-otp-verify"||
-      PATH ===  "/forget-reset-password"
-  
+      PATH === "/forget-password" ||
+      PATH === "/password-otp-verify" ||
+      PATH === "/forget-reset-password"
     ) {
       next();
       return;
@@ -34,6 +30,7 @@ const verifyToken = async (req, res, next) => {
     }
 
     const token = authorization.split(" ")[1];
+    //console.log(token)
 
     if (!token) {
       return res.status(401).json({ message: "Access token not found" });
