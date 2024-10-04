@@ -1,8 +1,7 @@
 import { Router } from 'express';
 const router = Router();
-import {checkForUpdate ,updateUserVersion} from "../Controllers/updateVersion.js"
+import {checkAndUpdateVersion } from "../Controllers/updateVersion.js"
 
-router.post('/check-update', checkForUpdate );
+router.post('/meta-data', checkAndUpdateVersion );
 
-router.post('/update-version', updateUserVersion);
 export default router;
