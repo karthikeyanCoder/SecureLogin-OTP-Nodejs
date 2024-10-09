@@ -9,6 +9,7 @@ import startMappingRouters from "./src/Routes/startMappingRoutes.js";
 import startMapping from "./src/Routes/startMapping.js";
 import autoMatic from "./src/Routes/autoMatic.js";
 import version from "./src/Routes/versionRoutes.js";
+import bookSession from "./src/Routes/BookApoinmentRoutes.js"
 dotenv.config();
 const PORT = process.env.PORT || 8080;
 
@@ -22,7 +23,7 @@ app.use("/", startMappingRouters);
 app.use("/", startMapping);
 app.use("/", autoMatic);
 app.use("/", version);
-
+app.use("/",bookSession)
 app.listen(PORT, async () => {
   await connectDB();
   console.log(`Server running on http://localhost:${PORT}`);
