@@ -14,6 +14,7 @@ const userSchema = new Schema(
       required: true,
       unique: true,
     },
+    role:{type:String,enum:['user','admin'],default:'user'},
     otp: { type: String },
     forgotPasswordOtp: { type: String },
     isFirstTime: { type: Boolean, default: true },
@@ -23,6 +24,5 @@ const userSchema = new Schema(
   },
   { timestamps: true }
 );
-
 const User = mongoose.model("User", userSchema);
 export default User;

@@ -165,17 +165,16 @@ export const login = async (req, res) => {
     const token = generateToken(user);
     return res
       .status(200)
-      .json({ success: true, message: "Login SuccessFull. ", token });
+      .json({ success: true, message: "Login SuccessFull.", token , role: user.role, });
   } catch (error) {
-    console.error("Error logging in:", error);
+    //console.error("Error logging in:", error);
     return res
       .status(500)
       .json({ success: false, error: error.message, error });
   }
 };
 
-//forget password
-
+//forget password apis
 export const forgotPasswordOtpSend = async (req, res) => {
   try {
     const { email } = req.body;
@@ -303,7 +302,7 @@ export const forgetResetPassword = async (req, res) => {
 
     return res
       .status(200)
-      .json({ success: true, message: "Password reset successful", token });
+      .json({ success: true, message: "Password reset successful", token,role: user.role,  });
   } catch (error) {
     return res
       .status(500)

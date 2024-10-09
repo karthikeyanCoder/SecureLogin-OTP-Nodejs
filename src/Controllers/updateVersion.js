@@ -63,7 +63,7 @@ export const getUserVersion = async (req, res) => {
   try {
     const { userId } = req.body
     const user = await User.findById(userId);
-
+    //const userId = req?.user?.userId;
     if (!user) {
       return res
         .status(404)
