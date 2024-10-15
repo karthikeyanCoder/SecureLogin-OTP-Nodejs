@@ -37,7 +37,7 @@ const verifyToken = async (req, res, next) => {
       return res.status(401).json({ message: "Access token not found" });
     }
     const decodedToken = jwt.verify(token, JWT_SECRET);
-    const allowedRoles = ["admin", "hr", "projectManager"];
+    const allowedRoles = ["admin", "hr", "projectManager","user"];
     if (!allowedRoles.includes(decodedToken.role)) {
       return res.status(403).json({ success: false, message: "Access denied. Insufficient permissions." });
     }
