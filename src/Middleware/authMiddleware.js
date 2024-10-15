@@ -5,10 +5,11 @@ const { JWT_SECRET } = process.env;
 
 const verifyToken = async (req, res, next) => {
   try {
+    
     const PATH = req.path;
 
     if (
-      PATH === "/register" ||
+      PATH.startsWith("/register") ||
       PATH === "/validate-user" ||
       PATH === "/verify-otp" ||
       PATH === "/create-password" ||
@@ -17,8 +18,8 @@ const verifyToken = async (req, res, next) => {
       PATH === "/password-otp-verify" ||
       PATH === "/forget-reset-password"
     ) {
-      next();
-      return;
+      return next();
+     
     }
 
     const authorization = req.headers["authorization"];
@@ -36,14 +37,26 @@ const verifyToken = async (req, res, next) => {
       return res.status(401).json({ message: "Access token not found" });
     }
     const decodedToken = jwt.verify(token, JWT_SECRET);
+    const allowedRoles = ["admin", "hr", "projectManager"];
+    if (!allowedRoles.includes(decodedToken.role)) {
+      return res.status(403).json({ success: false, message: "Access denied. Insufficient permissions." });
+    }
+    console.log("users :", decodedToken);
+  
     req.user = decodedToken;
-    //console.log("user :", decodedToken);
+    
+    console.log("user :", decodedToken);
+
     next();
   } catch (error) {
     if (error?.name === "TokenExpiredError") {
-      return res.status(401).json({ message: "Access token has expired" });
+      return res
+        .status(401)
+        .json({ message: "Access token has expired", error });
     }
-    return res.status(403).json({ message: "Token verification failed" });
+    return res
+      .status(403)
+      .json({ message: "Token verification failed", error });
   }
 };
 

@@ -125,6 +125,7 @@ export const createPassword = async (req, res) => {
       success: true,
       message: "Password Created successFully.",
       token,
+      role: user.role, 
     });
   } catch (error) {
     console.error("Error creating password:", error);

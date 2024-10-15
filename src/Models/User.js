@@ -14,13 +14,12 @@ const userSchema = new Schema(
       required: true,
       unique: true,
     },
-    role:{type:String,enum:['user','admin'],default:'user'},
+    role:{type:String,enum:['user','admin','hr','projectManager'],default:'user'},
     otp: { type: String },
     forgotPasswordOtp: { type: String },
     isFirstTime: { type: Boolean, default: true },
     isOtpVerified: { type: Boolean, default: false },
-    currentVersion: { type: String, default: "1.0" },
-    lastUpdateNotification: { type: Date },
+    
   },
   { timestamps: true }
 );
