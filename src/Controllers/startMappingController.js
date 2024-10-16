@@ -193,25 +193,46 @@ export const saveMappingData = async (req, res) => {
 
 export const getListMaps = async (req, res) => {
   try {
-    const { userId, robotId } = req.query;
-    console.log("user request query is:", req.query);
+    const { robotId } = req.query;
+    console.log("User request query is:", req.query);
+
+    // Check for valid query parameter names
+    const validParams = ["robotId"];
+    const invalidParams = Object.keys(req.query).filter(param => !validParams.includes(param));
+
+    if (invalidParams.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid query parameter(s): ${invalidParams.join(", ")}`,
+      });
+    }
+
+    // Check for the presence of robotId
+    if (robotId === undefined) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing required query parameter: robotId.",
+      });
+    }
+
+    // Validate the robotId type
+    if (typeof robotId !== 'string' || robotId.trim() === '') {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid robotId format. It must be a non-empty string.",
+      });
+    }
 
     const query = {};
-    if (userId) {
-      
-      if (mongoose.Types.ObjectId.isValid(userId)) {
-        query.userId = new mongoose.Types.ObjectId(userId);
-      } else {
-       
-        query.userId = userId;
-      }
-    }
-    if (robotId) query.robotId = robotId;
-    
-    console.log("query is", query);
 
+    // If robotId exists, add it to the query
+    query.robotId = robotId;
+
+    console.log("Query is", query);
+
+    // Fetching the mapping data based on the modified query
     const mappingData = await StartMappingData.find(query).exec();
-    console.log("mapping data,", mappingData);
+    console.log("Mapping data:", mappingData);
 
     if (!mappingData || mappingData.length === 0) {
       return res.status(404).json({
@@ -219,18 +240,32 @@ export const getListMaps = async (req, res) => {
         message: "No mapping data found.",
       });
     }
-    const decodedMappingData = mappingData.map((data) => {
+
+    // Formatting the mapping data and preparing the response
+    const formattedMappingData = mappingData.map((data) => {
       return {
         ...data._doc,
         map_image: `data:image/png;base64,${data.map_image}`,
       };
     });
+
     return res.status(200).json({
       success: true,
-      data: decodedMappingData,
+      data: formattedMappingData,
     });
   } catch (error) {
-    //console.error("Error retrieving mapping data:", error.message);
+    // Log the error for debugging purposes
+    console.error("Error retrieving mapping data:", error);
+
+    // Differentiate between different error types
+    if (error.name === 'CastError') {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid data provided.",
+        error: error.message,
+      });
+    }
+
     return res.status(500).json({
       success: false,
       message: "An error occurred while retrieving mapping data.",
