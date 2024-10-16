@@ -191,78 +191,44 @@ export const saveMappingData = async (req, res) => {
   }
 };
 
-// export const getListMaps = async (req, res) => {
-//   try {
-//     const { userId } = req.query;
-//     console.log("user request query is:", req.query);
-
-//     const query = {};
-//     if (userId) {
-//       if (mongoose.Types.ObjectId.isValid(userId)) {
-//         query.userId = new mongoose.Types.ObjectId(userId);
-//       } else {
-//         query.userId = userId;
-//       }
-//     }
-//     if (robotId) query.robotId = robotId;
-
-//     console.log("query is", query);
-
-//     const mappingData = await StartMappingData.find(query).exec();
-//     console.log("mapping data,", mappingData);
-
-//     if (!mappingData || mappingData.length === 0) {
-//       return res.status(404).json({
-//         success: false,
-//         message: "No mapping data found.",
-//       });
-//     }
-//     const MappingData = mappingData.map((data) => {
-//       return {
-//         ...data._doc,
-//         map_image: `data:image/png;base64,${data.map_image}`,
-//       };
-//     });
-//     return res.status(200).json({
-//       success: true,
-//       data: MappingData,
-//     });
-//   } catch (error) {
-//     console.error("Error retrieving mapping data:", error.message);
-//     return res.status(500).json({
-//       success: false,
-//       message: "An error occurred while retrieving mapping data.",
-//       error: error.message,
-//     });
-//   }
-// };
-
 
 
 export const getListMaps = async (req, res) => {
   try {
     const { robotId } = req.query;
     console.log("User request query is:", req.query);
+
+    // Check for valid query parameter names
+    const validParams = ["robotId"];
+    const invalidParams = Object.keys(req.query).filter(param => !validParams.includes(param));
+
+    if (invalidParams.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid query parameter(s): ${invalidParams.join(", ")}`,
+      });
+    }
+
+    // Check for the presence of robotId
     if (robotId === undefined) {
       return res.status(400).json({
         success: false,
         message: "Missing required query parameter: robotId.",
       });
     }
-    // Validate the robotId if it exists
-    if (robotId && typeof robotId !== 'string') {
+
+    // Validate the robotId type
+    if (typeof robotId !== 'string' || robotId.trim() === '') {
       return res.status(400).json({
         success: false,
-        message: "Invalid robotId format.",
+        message: "Invalid robotId format. It must be a non-empty string.",
       });
     }
 
     const query = {};
 
     // If robotId exists, add it to the query
-    if (robotId) {
-      query.robotId = robotId;
-    }
+    query.robotId = robotId;
 
     console.log("Query is", query);
 
@@ -348,3 +314,48 @@ export const getMapNames = async (req, res) => {
     });
   }
 };
+// export const getListMaps = async (req, res) => {
+//   try {
+//     const { userId } = req.query;
+//     console.log("user request query is:", req.query);
+
+//     const query = {};
+//     if (userId) {
+//       if (mongoose.Types.ObjectId.isValid(userId)) {
+//         query.userId = new mongoose.Types.ObjectId(userId);
+//       } else {
+//         query.userId = userId;
+//       }
+//     }
+//     if (robotId) query.robotId = robotId;
+
+//     console.log("query is", query);
+
+//     const mappingData = await StartMappingData.find(query).exec();
+//     console.log("mapping data,", mappingData);
+
+//     if (!mappingData || mappingData.length === 0) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "No mapping data found.",
+//       });
+//     }
+//     const MappingData = mappingData.map((data) => {
+//       return {
+//         ...data._doc,
+//         map_image: `data:image/png;base64,${data.map_image}`,
+//       };
+//     });
+//     return res.status(200).json({
+//       success: true,
+//       data: MappingData,
+//     });
+//   } catch (error) {
+//     console.error("Error retrieving mapping data:", error.message);
+//     return res.status(500).json({
+//       success: false,
+//       message: "An error occurred while retrieving mapping data.",
+//       error: error.message,
+//     });
+//   }
+// };
