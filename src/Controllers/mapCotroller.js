@@ -243,7 +243,12 @@ export const getListMaps = async (req, res) => {
   try {
     const { robotId } = req.query;
     console.log("User request query is:", req.query);
-
+    if (robotId === undefined) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing required query parameter: robotId.",
+      });
+    }
     // Validate the robotId if it exists
     if (robotId && typeof robotId !== 'string') {
       return res.status(400).json({
