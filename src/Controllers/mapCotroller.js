@@ -191,23 +191,67 @@ export const saveMappingData = async (req, res) => {
   }
 };
 
+// export const getListMaps = async (req, res) => {
+//   try {
+//     const { userId } = req.query;
+//     console.log("user request query is:", req.query);
+
+//     const query = {};
+//     if (userId) {
+//       if (mongoose.Types.ObjectId.isValid(userId)) {
+//         query.userId = new mongoose.Types.ObjectId(userId);
+//       } else {
+//         query.userId = userId;
+//       }
+//     }
+//     if (robotId) query.robotId = robotId;
+
+//     console.log("query is", query);
+
+//     const mappingData = await StartMappingData.find(query).exec();
+//     console.log("mapping data,", mappingData);
+
+//     if (!mappingData || mappingData.length === 0) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "No mapping data found.",
+//       });
+//     }
+//     const MappingData = mappingData.map((data) => {
+//       return {
+//         ...data._doc,
+//         map_image: `data:image/png;base64,${data.map_image}`,
+//       };
+//     });
+//     return res.status(200).json({
+//       success: true,
+//       data: MappingData,
+//     });
+//   } catch (error) {
+//     console.error("Error retrieving mapping data:", error.message);
+//     return res.status(500).json({
+//       success: false,
+//       message: "An error occurred while retrieving mapping data.",
+//       error: error.message,
+//     });
+//   }
+// };
+
+
+
 export const getListMaps = async (req, res) => {
   try {
-    const { userId, robotId } = req.query;
+   const {robotId} = req.query;
     console.log("user request query is:", req.query);
 
     const query = {};
-    if (userId) {
-      if (mongoose.Types.ObjectId.isValid(userId)) {
-        query.userId = new mongoose.Types.ObjectId(userId);
-      } else {
-        query.userId = userId;
-      }
-    }
+
+    // If robotId exists, add it to the query
     if (robotId) query.robotId = robotId;
 
     console.log("query is", query);
 
+    // Fetching the mapping data based on the modified query
     const mappingData = await StartMappingData.find(query).exec();
     console.log("mapping data,", mappingData);
 
@@ -217,12 +261,15 @@ export const getListMaps = async (req, res) => {
         message: "No mapping data found.",
       });
     }
+
+    // Formatting the mapping data and preparing the response
     const MappingData = mappingData.map((data) => {
       return {
         ...data._doc,
         map_image: `data:image/png;base64,${data.map_image}`,
       };
     });
+
     return res.status(200).json({
       success: true,
       data: MappingData,
@@ -236,6 +283,7 @@ export const getListMaps = async (req, res) => {
     });
   }
 };
+
 
 export const getMapNames = async (req, res) => {
   try {

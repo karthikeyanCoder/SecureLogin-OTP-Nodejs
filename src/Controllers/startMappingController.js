@@ -277,3 +277,4 @@ export const getMapNames = async (req, res) => {
     });
   }
 };
+
