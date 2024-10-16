@@ -241,19 +241,29 @@ export const saveMappingData = async (req, res) => {
 
 export const getListMaps = async (req, res) => {
   try {
-   const {robotId} = req.query;
-    console.log("user request query is:", req.query);
+    const { robotId } = req.query;
+    console.log("User request query is:", req.query);
+
+    // Validate the robotId if it exists
+    if (robotId && typeof robotId !== 'string') {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid robotId format.",
+      });
+    }
 
     const query = {};
 
     // If robotId exists, add it to the query
-    if (robotId) query.robotId = robotId;
+    if (robotId) {
+      query.robotId = robotId;
+    }
 
-    console.log("query is", query);
+    console.log("Query is", query);
 
     // Fetching the mapping data based on the modified query
     const mappingData = await StartMappingData.find(query).exec();
-    console.log("mapping data,", mappingData);
+    console.log("Mapping data:", mappingData);
 
     if (!mappingData || mappingData.length === 0) {
       return res.status(404).json({
@@ -263,7 +273,7 @@ export const getListMaps = async (req, res) => {
     }
 
     // Formatting the mapping data and preparing the response
-    const MappingData = mappingData.map((data) => {
+    const formattedMappingData = mappingData.map((data) => {
       return {
         ...data._doc,
         map_image: `data:image/png;base64,${data.map_image}`,
@@ -272,10 +282,21 @@ export const getListMaps = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      data: MappingData,
+      data: formattedMappingData,
     });
   } catch (error) {
-    console.error("Error retrieving mapping data:", error.message);
+    // Log the error for debugging purposes
+    console.error("Error retrieving mapping data:", error);
+
+    // Differentiate between different error types
+    if (error.name === 'CastError') {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid data provided.",
+        error: error.message,
+      });
+    }
+
     return res.status(500).json({
       success: false,
       message: "An error occurred while retrieving mapping data.",
@@ -283,6 +304,7 @@ export const getListMaps = async (req, res) => {
     });
   }
 };
+
 
 
 export const getMapNames = async (req, res) => {
